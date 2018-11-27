@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert CHS requirements from xlsx to json
 Usage:
-    xljs -i <excel-file> (ps | --print-sheet-names | -s <sheet-name>)
+    xljs -i <excel-file> (ps | --print-sheet-names | -s <sheet-name>) [-d <output-dir>]
     xljs -h --help
 """
 import uuid
@@ -80,4 +80,13 @@ if __name__ == '__main__':
         'type': '',
         'formElementGroups': fEGs
     }
-    print(json.dumps(form, indent=4))
+    output_dir = args['<output-dir>'] or "out"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    out_file = open(
+        f"{os.path.join(output_dir, sheet.name.title().replace(' ',''))}.json",
+        'w')
+
+    json.dump(form, out_file, indent=4)
+    out_file.close()
+    print(f"Generated {out_file.name}")
