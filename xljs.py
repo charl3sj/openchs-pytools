@@ -67,6 +67,12 @@ def gen_feGs(_sheet, row_num, fegs=[], feg_num=1):
     return fegs
 
 
+def make_out_file(output_dir, file_name):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    return open(f"{os.path.join(output_dir, file_name)}.json", 'w')
+
+
 if __name__ == '__main__':
     args = docopt(__doc__)
     fyl = validated_fyl(args['<excel-file>'])
@@ -81,11 +87,7 @@ if __name__ == '__main__':
         'formElementGroups': fEGs
     }
     output_dir = args['<output-dir>'] or "out"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    out_file = open(
-        f"{os.path.join(output_dir, sheet.name.title().replace(' ',''))}.json",
-        'w')
+    out_file = make_out_file(output_dir, sheet.name.title().replace(' ',''))
 
     json.dump(form, out_file, indent=4)
     out_file.close()
